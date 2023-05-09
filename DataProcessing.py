@@ -5,13 +5,12 @@ import scipy.stats as sps
 from random import uniform, choice, randint
 import itertools
 import string
+import os
 
 
 class DataProcessor:
 
-    def __init__(self, figs_path, figs_amount):
-        self.figs_path = figs_path
-        self.figs_amount = figs_amount
+    def __init__(self):
         self.markers_list = ['.', 'o', 'v', '^', '<', '>', '8', 's', 'p', '*', 'h', 'H', 'D', 'd', 'P', 'X']
         self.min_marker_size = 10
         self.max_marker_size = 150
@@ -48,9 +47,9 @@ class DataProcessor:
         letters = string.ascii_lowercase
         return ''.join(choice(letters) for i in range(length))
 
-    def create_figures(self):
+    def create_figures(self, figs_path, figs_amount):
 
-        for i in range(self.figs_amount):
+        for i in range(figs_amount):
             loc = uniform(self.grid_loc_min, self.grid_loc_max)
             scale = uniform(self.grid_scale_min, self.grid_scale_max)
             x_func = choice(self.func_list)
@@ -86,23 +85,29 @@ class DataProcessor:
             plt.xlabel(x_label)
             plt.ylabel(y_label)
             plt.title(title)
-            plt.savefig('./' + self.figs_path + '/fig' + f'{i}.png')
+            plt.savefig('./' + figs_path + '/fig' + f'{i}.png')
             plt.close()
 
-    def make_grayscale(self):
-        pass
+    def make_grayscale(self, initial_path, final_path):
+        images = os.listdir(initial_path)
+        for image_name in images:
+            img = Image.open(initial_path + '/' + image_name).convert('L')
+            img.save(final_path + '/' + image_name)
 
-    def resize(self):
-        pass
+    def resize(self, initial_path, final_path, size):
+        # size - tuple
+        images = os.listdir(initial_path)
+        for image_name in images:
+            img = Image.open(initial_path + '/' + image_name)
+            img = img.resize(size)
+            img.save(final_path + '/' + image_name)
 
-    def augmentation(self):
-        pass
+    def sharpening(self, initial_path, final_path):
+        images = os.listdir(initial_path)
+        for image_name in images:
+            img = np.array(Image.open(initial_path + '/' + image_name))
+            im = ((img > 1)*255).astype(np.uint8)
+            im = Image.fromarray(im)
+            im.save(final_path + '/' + image_name)
 
 
-class DataPreProcessor:
-
-    def make_grayscale(self):
-        pass
-
-    def resize(self):
-        pass
