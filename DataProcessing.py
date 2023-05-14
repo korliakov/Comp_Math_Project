@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import torch
 from PIL import Image
 import scipy.stats as sps
 from random import uniform, choice, randint
@@ -110,4 +111,15 @@ class DataProcessor:
             im = Image.fromarray(im)
             im.save(final_path + '/' + image_name)
 
+class Preprocessing:
+
+    def prepare(self, initial_path, size):
+        images = os.listdir(initial_path)
+        list_images = []
+        for image_name in images:
+            img = Image.open(initial_path + '/' + image_name).convert('L')
+            img = img.resize(size)
+            list_images.append(torch.tensor(np.array(img), dtype=torch.float32).unsqueeze(0))
+
+        return list_images
 

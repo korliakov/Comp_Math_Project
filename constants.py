@@ -1,0 +1,7 @@
+SIZE = (512, 512)
+THRESHOLD = 0.92
+EPS = 1.2
+MIN_SAMPLES = 1
+
+MODEL_PATH = "./model.pt"
+
